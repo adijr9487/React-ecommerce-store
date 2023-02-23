@@ -2,13 +2,13 @@ import { Box } from "@mui/system";
 import React, { useState, useEffect } from "react";
 import ProductItem from "../ProductItem/ProductItem";
 
-const Favourite = ({ drawerWidth, product }) => {
-  const [favProduct, setFavProduct] = useState([]);
+const Cart = ({ drawerWidth, product }) => {
+  const [cartProduct, setCartProduct] = useState([]);
 
   useEffect(() => {
-    const first = JSON.parse(localStorage.getItem("favourite")) || [];
+    const first = JSON.parse(localStorage.getItem("cart")) || [];
     // const second = JSON.parse(localStorage.getItem("cart")) || [];
-    setFavProduct(first);
+    setCartProduct(first);
   }, []);
 
   return (
@@ -24,11 +24,11 @@ const Favourite = ({ drawerWidth, product }) => {
         justifyContent: "center",
       }}
     >
-      {favProduct.map((item) => {
+      {cartProduct.map((item) => {
         return <ProductItem key={item.id} product={item} />;
       })}
     </Box>
   );
 };
 
-export default Favourite;
+export default Cart;

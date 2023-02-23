@@ -17,10 +17,13 @@ const ProductItem = ({ product }) => {
     const first = JSON.parse(localStorage.getItem("favourite")) || [];
     const second = JSON.parse(localStorage.getItem("cart")) || [];
 
-    if (first.includes(product.id)) {
+    let first_if_contains = first.some((items) => items.id === product.id);
+    let second_if_contains = second.some((items) => items.id === product.id);
+
+    if (first_if_contains) {
       setMarks((prev) => [...prev, "favourite"]);
     }
-    if (second.includes(product.id)) {
+    if (second_if_contains) {
       setMarks((prev) => [...prev, "cart"]);
     }
   }, []);
@@ -28,11 +31,13 @@ const ProductItem = ({ product }) => {
   const addToHandler = (e, type) => {
     let arr = JSON.parse(localStorage.getItem(type)) || [];
 
-    if (e.target.value && !arr.includes(product.id)) {
-      arr.push(product.id);
+    let if_contains = arr.some((items) => items.id === product.id);
+
+    if (e.target.value && !if_contains) {
+      arr.push(product);
       setMarks((prev) => [...prev, type]);
     } else {
-      arr = arr.filter((item) => item !== product.id);
+      arr = arr.filter((item) => item.id !== product.id);
       setMarks((prev) => prev.filter((item) => item !== type));
     }
 

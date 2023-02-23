@@ -6,6 +6,8 @@ import { Box, LinearProgress, Toolbar } from "@mui/material";
 import Product from "./Components/Product/Product";
 import { Routes, Route } from "react-router-dom";
 import Favourite from "./Components/Favourite/Favourite";
+import Cart from "./Components/Cart/Cart";
+import Home from "./Components/Home/Home";
 
 const drawerWidth = 240;
 const baseUrl = "https://fakestoreapi.com/";
@@ -64,9 +66,11 @@ function App() {
   }, [products]);
 
   useEffect(() => {
+    console.log("hello");
     let filteredProducts = products.filter((product) =>
       product.title.toLowerCase().includes(search.toLowerCase())
     );
+    console.log(search);
 
     if (filter.rating) {
       filteredProducts = filteredProducts.filter(
@@ -111,16 +115,16 @@ function App() {
       />
 
       <Routes>
+        <Route path="/" element={<Home drawerWidth={drawerWidth} />}></Route>
         <Route
-          path="/"
+          path="/products"
           element={<Product products={showProduct} drawerWidth={drawerWidth} />}
         ></Route>
         <Route
-          path="/favourite/"
-          element={<Favourite />}
-        >
-
-        </Route>
+          path="favourite"
+          element={<Favourite drawerWidth={drawerWidth} />}
+        ></Route>
+        <Route path="cart" element={<Cart drawerWidth={drawerWidth} />}></Route>
       </Routes>
     </div>
   );
