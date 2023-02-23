@@ -61,6 +61,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const Navbar = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [search, setSearch] = React.useState("");
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -80,6 +81,14 @@ const Navbar = (props) => {
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleSearch = (e) => {
+    if (e.key === "Enter") {
+      props.search(search);
+    } else {
+      setSearch(e.target.value);
+    }
   };
 
   const menuId = "primary-search-account-menu";
@@ -191,6 +200,7 @@ const Navbar = (props) => {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
+              onKeyDown={handleSearch}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
