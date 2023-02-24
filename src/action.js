@@ -38,6 +38,16 @@ const removeItemToFavourite = (item) => ({
   payload: item,
 });
 
+const addSearchKeyword = (keyword) => ({
+  type: "ADD_SEARCH_KEYWORD",
+  payload: keyword,
+});
+
+const removeSeachKeyword = (keyword) => ({
+  type: "REMOVE_SEARCH_KEYWORD",
+  payload: keyword,
+});
+
 module.exports = {
   setFetchedData,
   setFilter,
@@ -47,4 +57,6 @@ module.exports = {
   addItemToFavourite,
   removeItemToCart,
   removeItemToFavourite,
+  addSearchKeyword,
+  removeSeachKeyword,
 };

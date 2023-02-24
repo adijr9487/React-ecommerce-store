@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -14,12 +14,14 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import StoreIcon from "@mui/icons-material/Store";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { NavLink } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { setSearch } from "../../action";
+import { setSearch, addSearchKeyword, removeSeachKeyword } from "../../action";
+import { Autocomplete, Input, TextField } from "@mui/material";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -37,36 +39,12 @@ const Search = styled("div")(({ theme }) => ({
   },
 }));
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
-
 const Navbar = (props) => {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [input, setInput] = React.useState("");
 
   const dispatch = useDispatch();
-  const { cart, favourite } = useSelector((state) => state);
+  const { cart, favourite, HistorySearch } = useSelector((state) => state);
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -78,11 +56,25 @@ const Navbar = (props) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const removeSearchKeywordHandler = (keyword) => {
+    dispatch(removeSeachKeyword(keyword));
+  };
+
   const handleSearch = (e) => {
     if (e.key === "Enter") {
-      dispatch(setSearch(input));
-    } else {
-      setInput(e.target.value);
+      if (e.target.value || input) {
+        dispatch(setSearch(e.target.value));
+        dispatch(addSearchKeyword(e.target.value));
+      }
+    } else if (e.key === `[a-zA-Z0-9]`) {
+      setInput(e.target.value + e.key);
+    }
+  };
+  const handleOption = (e, option) => {
+    if (option) {
+      setInput(option);
+      dispatch(setSearch(option));
+      dispatch(addSearchKeyword(option));
     }
   };
 
@@ -151,16 +143,66 @@ const Navbar = (props) => {
           <NavLink to={"/"} style={{ color: "inherit" }}>
             <StoreIcon />
           </NavLink>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              onChange={handleSearch}
-              onKeyPress={handleSearch}
+          {/* search bar  */}
+          <Search
+            style={{
+              width: 300,
+              display: "flex",
+              alignItems: "center",
+              padding: "0 10px",
+            }}
+          >
+            <SearchIcon />
+            <Autocomplete
+              id="free-solo-demo"
+              freeSolo
+              options={[...HistorySearch]}
+              style={{ width: "100%" }}
+              value={input}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Search"
+                  onKeyDown={handleSearch}
+                  style={{
+                    border: "none",
+                    outline: "none",
+                    backgroundColor: "transparent",
+                    color: "white",
+                    fontSize: 16,
+                    padding: "0",
+                    "& input": {
+                      border: "none",
+                    },
+                  }}
+                />
+              )}
+              renderOption={(params, option) => (
+                <div
+                  {...params}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "5px 10px",
+                  }}
+                  onClick={() => {}}
+                >
+                  <div
+                    onClick={(e) => handleOption(e, option)}
+                    style={{ width: "100%", padding: 5 }}
+                  >
+                    {option}
+                  </div>
+                  <CloseIcon
+                    size="small"
+                    onClick={() => removeSearchKeywordHandler(option)}
+                  ></CloseIcon>
+                </div>
+              )}
             />
           </Search>
+
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <NavLink to="/favourite" style={{ color: "inherit" }}>

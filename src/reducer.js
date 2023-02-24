@@ -5,6 +5,7 @@ const initialState = {
   search: "",
   cart: [],
   favourite: [],
+  HistorySearch: new Set(["Men", "Jeans"]),
 };
 
 const reducer = (state = initialState, action) => {
@@ -56,6 +57,20 @@ const reducer = (state = initialState, action) => {
         ...state,
         favourite: state.favourite.filter(
           (item) => item.id !== action.payload.id
+        ),
+      };
+
+    case "ADD_SEARCH_KEYWORD":
+      return {
+        ...state,
+        HistorySearch: new Set([...state.HistorySearch, action.payload]),
+      };
+
+    case "REMOVE_SEARCH_KEYWORD":
+      return {
+        ...state,
+        HistorySearch: new Set(
+          [...state.HistorySearch].filter((item) => item !== action.payload)
         ),
       };
 
