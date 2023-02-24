@@ -10,6 +10,7 @@ import Cart from "./Components/Cart/Cart";
 import Home from "./Components/Home/Home";
 import { useSelector, useDispatch } from "react-redux";
 import { setFetchedData, setShowProduct, setFilter } from "./action";
+import EmptyPage from "./Components/EmptyPage/EmptyPage";
 
 const drawerWidth = 240;
 const baseUrl = "https://fakestoreapi.com/";
@@ -125,6 +126,10 @@ function App() {
           element={<Favourite drawerWidth={drawerWidth} />}
         ></Route>
         <Route path="cart" element={<Cart drawerWidth={drawerWidth} />}></Route>
+        <Route
+          path="*"
+          element={<EmptyPage drawerWidth={drawerWidth} />}
+        ></Route>
       </Routes>
     </div>
   );
