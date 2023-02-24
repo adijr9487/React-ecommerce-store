@@ -20,13 +20,17 @@ const Favourite = ({ drawerWidth }) => {
         justifyContent: "center",
       }}
     >
-      {favourite.map((item) => {
-        return (
-          <SnackbarProvider key={item.id} maxSnack={3}>
-            <ProductItem product={item} />
-          </SnackbarProvider>
-        );
-      })}
+      {favourite.length ? (
+        favourite.map((item) => {
+          return (
+            <SnackbarProvider key={item.id} maxSnack={3}>
+              <ProductItem product={item} />
+            </SnackbarProvider>
+          );
+        })
+      ) : (
+        <h1>There is no favourite product</h1>
+      )}
     </Box>
   );
 };

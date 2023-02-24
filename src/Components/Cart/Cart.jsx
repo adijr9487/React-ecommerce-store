@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import ProductItem from "../ProductItem/ProductItem";
 import { SnackbarProvider } from "notistack";
 import { useSelector } from "react-redux";
+import ProductionQuantityLimitsIcon from "@mui/icons-material/ProductionQuantityLimits";
 
 const Cart = ({ drawerWidth, product }) => {
   const { cart } = useSelector((state) => state);
@@ -20,13 +21,20 @@ const Cart = ({ drawerWidth, product }) => {
         justifyContent: "center",
       }}
     >
-      {cart.map((item) => {
-        return (
-          <SnackbarProvider key={item.id} maxSnack={3}>
-            <ProductItem key={item.id} product={item} />
-          </SnackbarProvider>
-        );
-      })}
+      {cart.length ? (
+        cart.map((item) => {
+          return (
+            <SnackbarProvider key={item.id} maxSnack={3}>
+              <ProductItem key={item.id} product={item} />
+            </SnackbarProvider>
+          );
+        })
+      ) : (
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <h1>There is no product in cart</h1>
+          <ProductionQuantityLimitsIcon sx={{ fontSize: 100 }} />
+        </div>
+      )}
     </Box>
   );
 };
