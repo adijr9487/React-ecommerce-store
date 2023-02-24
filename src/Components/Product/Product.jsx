@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box } from "@mui/system";
 import ProductItem from "../ProductItem/ProductItem";
 import { SnackbarProvider } from "notistack";
+import { useSelector } from "react-redux";
 
 const Product = (props) => {
+  const { showProduct } = useSelector((state) => state);
   return (
     <Box
       component="main"
@@ -19,7 +21,7 @@ const Product = (props) => {
     >
       {/* Main product section */}
 
-      {props.products.map((item) => {
+      {showProduct.map((item) => {
         return (
           <SnackbarProvider key={item.id} maxSnack={3}>
             <ProductItem product={item} />

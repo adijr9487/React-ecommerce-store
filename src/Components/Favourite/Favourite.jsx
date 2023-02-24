@@ -2,15 +2,10 @@ import { Box } from "@mui/system";
 import React, { useState, useEffect } from "react";
 import ProductItem from "../ProductItem/ProductItem";
 import { SnackbarProvider } from "notistack";
+import { useSelector } from "react-redux";
 
-const Favourite = ({ drawerWidth, product }) => {
-  const [favProduct, setFavProduct] = useState([]);
-
-  useEffect(() => {
-    const first = JSON.parse(localStorage.getItem("favourite")) || [];
-    // const second = JSON.parse(localStorage.getItem("cart")) || [];
-    setFavProduct(first);
-  }, []);
+const Favourite = ({ drawerWidth }) => {
+  const { favourite } = useSelector((state) => state);
 
   return (
     <Box
@@ -25,7 +20,7 @@ const Favourite = ({ drawerWidth, product }) => {
         justifyContent: "center",
       }}
     >
-      {favProduct.map((item) => {
+      {favourite.map((item) => {
         return (
           <SnackbarProvider key={item.id} maxSnack={3}>
             <ProductItem product={item} />

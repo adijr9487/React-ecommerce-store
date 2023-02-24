@@ -10,20 +10,30 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { useSnackbar } from "notistack";
 
+import { useSelector, useDispatch } from "react-redux";
+import {
+  addItemToCart,
+  removeItemToCart,
+  addItemToFavourite,
+  removeItemToFavourite,
+} from "../../action";
+
 const ProductItem = ({ product }) => {
   const [marks, setMarks] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
+  const { cart, favourite } = useSelector((state) => state);
 
   const handleClick = (message, variant) => {
     enqueueSnackbar(message, { variant: variant });
   };
 
   useEffect(() => {
-    const first = JSON.parse(localStorage.getItem("favourite")) || [];
-    const second = JSON.parse(localStorage.getItem("cart")) || [];
+    // const first = JSON.parse(localStorage.getItem("favourite")) || [];
+    // const second = JSON.parse(localStorage.getItem("cart")) || [];
 
-    let first_if_contains = first.some((items) => items.id === product.id);
-    let second_if_contains = second.some((items) => items.id === product.id);
+    let first_if_contains = favourite.some((items) => items.id === product.id);
+    let second_if_contains = cart.some((items) => items.id === product.id);
 
     if (first_if_contains) {
       setMarks((prev) => [...prev, "favourite"]);
@@ -34,20 +44,33 @@ const ProductItem = ({ product }) => {
   }, []);
 
   const addToHandler = (e, type) => {
-    let arr = JSON.parse(localStorage.getItem(type)) || [];
+    let arr = [];
+
+    if (type === "cart") {
+      arr = cart;
+    } else if (type === "favourite") {
+      arr = favourite;
+    }
 
     let if_contains = arr.some((items) => items.id === product.id);
 
     if (e.target.value && !if_contains) {
-      arr.push(product);
+      if (type === "cart") {
+        dispatch(addItemToCart(product));
+      } else if (type === "favourite") {
+        dispatch(addItemToFavourite(product));
+      }
       setMarks((prev) => [...prev, type]);
     } else {
-      arr = arr.filter((item) => item.id !== product.id);
+      if (type === "cart") {
+        dispatch(removeItemToCart(product));
+      } else if (type === "favourite") {
+        dispatch(removeItemToFavourite(product));
+      }
       setMarks((prev) => prev.filter((item) => item !== type));
     }
 
-    localStorage.setItem(type, JSON.stringify(arr));
-    console.log(if_contains);
+    // localStorage.setItem(type, JSON.stringify(arr));
     if (if_contains) {
       handleClick(`Item successfully removed from ${type}`, "default");
     } else {

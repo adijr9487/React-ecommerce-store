@@ -14,16 +14,23 @@ import {
   Slider,
 } from "@mui/material";
 
+import { useDispatch, useSelector } from "react-redux";
+import { setFilter } from "../../action";
+
 // function valuetext(value) {
 //   return `$${value}`;
 // }
 
-const Filter = ({ filter, setFilter }) => {
+const Filter = (props) => {
   const [expanded, setExpanded] = useState(false);
   const [categoryFilter, setCategory] = useState(null);
   const [rating, setRating] = React.useState(null);
   const [price, setPrice] = React.useState(null);
   const [changed, setChanged] = useState(false);
+
+  const dispatch = useDispatch();
+  const { filter } = useSelector((state) => state);
+
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -77,11 +84,13 @@ const Filter = ({ filter, setFilter }) => {
   }, [filter]);
 
   const applyHandler = () => {
-    setFilter({
-      categories: categoryFilter,
-      rating: rating,
-      price: price,
-    });
+    dispatch(
+      setFilter({
+        categories: categoryFilter,
+        rating: rating,
+        price: price,
+      })
+    );
   };
 
   return (

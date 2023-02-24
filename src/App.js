@@ -8,37 +8,29 @@ import { Routes, Route } from "react-router-dom";
 import Favourite from "./Components/Favourite/Favourite";
 import Cart from "./Components/Cart/Cart";
 import Home from "./Components/Home/Home";
+import { useSelector, useDispatch } from "react-redux";
+import { setFetchedData, setShowProduct, setFilter } from "./action";
 
 const drawerWidth = 240;
 const baseUrl = "https://fakestoreapi.com/";
 
 function App() {
+  const { product, filter, search } = useSelector((state) => state);
+  const dispatch = useDispatch();
+
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [products, setProducts] = useState([]);
-  const [showProduct, setShowProduct] = useState([]);
   const [onLoading, setOnLoading] = useState(false);
-  const [filter, setFilter] = useState({});
-  const [search, setSearch] = useState("");
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  useEffect(() => {
-    setOnLoading(true);
-    fetch(baseUrl + "products")
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
-        console.log(data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
-  useEffect(() => {
-    if (products.length > 0) {
+  const initializeData = (data) => {
+    if (data.length > 0) {
+      dispatch(setFetchedData(data));
       const categories = new Map();
       const price = [1000, 0];
-      products.forEach((product) => {
+      data.forEach((product) => {
         categories[product.category] = true;
         if (product.price < price[0]) {
           price[0] = product.price;
@@ -47,30 +39,38 @@ function App() {
           price[1] = product.price;
         }
       });
-      setShowProduct(products);
-
-      setFilter((prev) => ({
-        ...prev,
-        rating: [0, 5],
-        categories: {
-          ...categories,
-        },
-        price: {
-          range: [...price],
-          selected: [...price],
-        },
-      }));
-
+      // setShowProduct(products);
+      dispatch(setShowProduct(data));
+      dispatch(
+        setFilter({
+          rating: [0, 5],
+          categories: {
+            ...categories,
+          },
+          price: {
+            range: [...price],
+            selected: [...price],
+          },
+        })
+      );
       setOnLoading(false);
     }
-  }, [products]);
+  };
 
   useEffect(() => {
-    console.log("hello");
-    let filteredProducts = products.filter((product) =>
+    setOnLoading(true);
+    fetch(baseUrl + "products")
+      .then((res) => res.json())
+      .then((data) => {
+        initializeData(data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    let filteredProducts = product.filter((product) =>
       product.title.toLowerCase().includes(search.toLowerCase())
     );
-    console.log(search);
 
     if (filter.rating) {
       filteredProducts = filteredProducts.filter(
@@ -93,13 +93,13 @@ function App() {
         (product) => product.price <= filter.price.selected[1]
       );
     }
-    setShowProduct(filteredProducts);
+    console.log(filteredProducts);
+    dispatch(setShowProduct(filteredProducts));
   }, [filter, search]);
 
   return (
     <div className="App">
       <Navbar
-        search={(keyword) => setSearch(keyword)}
         drawerWidth={drawerWidth}
         handleDrawerToggle={handleDrawerToggle}
       />
@@ -118,7 +118,7 @@ function App() {
         <Route path="/" element={<Home drawerWidth={drawerWidth} />}></Route>
         <Route
           path="/products"
-          element={<Product products={showProduct} drawerWidth={drawerWidth} />}
+          element={<Product drawerWidth={drawerWidth} />}
         ></Route>
         <Route
           path="favourite"

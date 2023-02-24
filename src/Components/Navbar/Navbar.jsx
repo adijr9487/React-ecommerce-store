@@ -10,14 +10,16 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import StoreIcon from "@mui/icons-material/Store";
 
 import { NavLink } from "react-router-dom";
-import { Link } from "@mui/material";
+
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { setSearch } from "../../action";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -61,7 +63,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const Navbar = (props) => {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const [search, setSearch] = React.useState("");
+  const [input, setInput] = React.useState("");
+
+  const dispatch = useDispatch();
+  const { cart, favourite } = useSelector((state) => state);
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -75,9 +80,9 @@ const Navbar = (props) => {
 
   const handleSearch = (e) => {
     if (e.key === "Enter") {
-      props.search(search);
+      dispatch(setSearch(input));
     } else {
-      setSearch(e.target.value);
+      setInput(e.target.value);
     }
   };
 
@@ -103,11 +108,8 @@ const Navbar = (props) => {
         style={{ color: "inherit", textDecoration: "none" }}
       >
         <MenuItem>
-          <IconButton
-            size="large"
-            color="inherit"
-          >
-            <Badge badgeContent={4} color="error">
+          <IconButton size="large" color="inherit">
+            <Badge badgeContent={favourite.length} color="error">
               <FavoriteIcon />
             </Badge>
           </IconButton>
@@ -116,11 +118,8 @@ const Navbar = (props) => {
       </NavLink>
       <NavLink to="/cart" style={{ color: "inherit", textDecoration: "none" }}>
         <MenuItem>
-          <IconButton
-            size="large"
-            color="inherit"
-          >
-            <Badge badgeContent={17} color="error">
+          <IconButton size="large" color="inherit">
+            <Badge badgeContent={cart.length} color="error">
               <ShoppingCartIcon />
             </Badge>
           </IconButton>
@@ -165,11 +164,8 @@ const Navbar = (props) => {
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <NavLink to="/favourite" style={{ color: "inherit" }}>
-              <IconButton
-                size="large"
-                color="inherit"
-              >
-                <Badge badgeContent={5} color="error">
+              <IconButton size="large" color="inherit">
+                <Badge badgeContent={favourite.length} color="error">
                   <FavoriteIcon />
                 </Badge>
               </IconButton>
@@ -178,11 +174,8 @@ const Navbar = (props) => {
               to="/cart"
               style={{ color: "inherit", textDecoration: "none" }}
             >
-              <IconButton
-                size="large"
-                color="inherit"
-              >
-                <Badge badgeContent={17} color="error">
+              <IconButton size="large" color="inherit">
+                <Badge badgeContent={cart.length} color="error">
                   <ShoppingCartIcon />
                 </Badge>
               </IconButton>
