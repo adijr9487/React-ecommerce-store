@@ -60,24 +60,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Navbar = (props) => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [search, setSearch] = React.useState("");
 
-  const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -91,28 +80,6 @@ const Navbar = (props) => {
       setSearch(e.target.value);
     }
   };
-
-  const menuId = "primary-search-account-menu";
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
@@ -138,7 +105,6 @@ const Navbar = (props) => {
         <MenuItem>
           <IconButton
             size="large"
-            aria-label="show 4 new mails"
             color="inherit"
           >
             <Badge badgeContent={4} color="error">
@@ -152,7 +118,6 @@ const Navbar = (props) => {
         <MenuItem>
           <IconButton
             size="large"
-            aria-label="show 17 new notifications"
             color="inherit"
           >
             <Badge badgeContent={17} color="error">
@@ -162,18 +127,6 @@ const Navbar = (props) => {
           <p>Cart</p>
         </MenuItem>
       </NavLink>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
     </Menu>
   );
 
@@ -191,7 +144,6 @@ const Navbar = (props) => {
             size="large"
             edge="start"
             color="inherit"
-            aria-label="open drawer"
             sx={{ mr: 2, display: { xs: "block", sm: "none" } }}
             onClick={props.handleDrawerToggle}
           >
@@ -206,7 +158,6 @@ const Navbar = (props) => {
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
               onChange={handleSearch}
               onKeyPress={handleSearch}
             />
@@ -216,10 +167,9 @@ const Navbar = (props) => {
             <NavLink to="/favourite" style={{ color: "inherit" }}>
               <IconButton
                 size="large"
-                aria-label="show 4 new mails"
                 color="inherit"
               >
-                <Badge badgeContent={4} color="error">
+                <Badge badgeContent={5} color="error">
                   <FavoriteIcon />
                 </Badge>
               </IconButton>
@@ -230,7 +180,6 @@ const Navbar = (props) => {
             >
               <IconButton
                 size="large"
-                aria-label="show 17 new notifications"
                 color="inherit"
               >
                 <Badge badgeContent={17} color="error">
@@ -238,22 +187,10 @@ const Navbar = (props) => {
                 </Badge>
               </IconButton>
             </NavLink>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
-              aria-label="show more"
               aria-controls={mobileMenuId}
               aria-haspopup="true"
               onClick={handleMobileMenuOpen}
@@ -265,7 +202,6 @@ const Navbar = (props) => {
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
-      {renderMenu}
     </Box>
   );
 };

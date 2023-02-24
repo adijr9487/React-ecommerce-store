@@ -7,11 +7,16 @@ import Typography from "@mui/material/Typography";
 import Progress from "./Progress/Progress";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { useSnackbar } from "notistack";
 
 const ProductItem = ({ product }) => {
   const [marks, setMarks] = useState([]);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleClick = (message, variant) => {
+    enqueueSnackbar(message, { variant: variant });
+  };
 
   useEffect(() => {
     const first = JSON.parse(localStorage.getItem("favourite")) || [];
@@ -42,6 +47,12 @@ const ProductItem = ({ product }) => {
     }
 
     localStorage.setItem(type, JSON.stringify(arr));
+    console.log(if_contains);
+    if (if_contains) {
+      handleClick(`Item successfully removed from ${type}`, "default");
+    } else {
+      handleClick(`Item successfully added to ${type}`, "info");
+    }
   };
 
   return (

@@ -1,15 +1,15 @@
 import { Box } from "@mui/system";
 import React, { useState, useEffect } from "react";
 import ProductItem from "../ProductItem/ProductItem";
-
+import { SnackbarProvider } from "notistack";
 const Cart = ({ drawerWidth, product }) => {
   const [cartProduct, setCartProduct] = useState([]);
-
+  const [flag, setFlag] = useState(false);
   useEffect(() => {
     const first = JSON.parse(localStorage.getItem("cart")) || [];
     // const second = JSON.parse(localStorage.getItem("cart")) || [];
     setCartProduct(first);
-  }, []);
+  }, [flag]);
 
   return (
     <Box
@@ -25,7 +25,11 @@ const Cart = ({ drawerWidth, product }) => {
       }}
     >
       {cartProduct.map((item) => {
-        return <ProductItem key={item.id} product={item} />;
+        return (
+          <SnackbarProvider key={item.id} maxSnack={3}>
+            <ProductItem setFlag={setFlag} key={item.id} product={item} />
+          </SnackbarProvider>
+        );
       })}
     </Box>
   );

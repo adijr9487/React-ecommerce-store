@@ -1,6 +1,7 @@
 import { Box } from "@mui/system";
 import React, { useState, useEffect } from "react";
 import ProductItem from "../ProductItem/ProductItem";
+import { SnackbarProvider } from "notistack";
 
 const Favourite = ({ drawerWidth, product }) => {
   const [favProduct, setFavProduct] = useState([]);
@@ -25,7 +26,11 @@ const Favourite = ({ drawerWidth, product }) => {
       }}
     >
       {favProduct.map((item) => {
-        return <ProductItem key={item.id} product={item} />;
+        return (
+          <SnackbarProvider key={item.id} maxSnack={3}>
+            <ProductItem product={item} />
+          </SnackbarProvider>
+        );
       })}
     </Box>
   );

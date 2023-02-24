@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box } from "@mui/system";
 import ProductItem from "../ProductItem/ProductItem";
+import { SnackbarProvider } from "notistack";
 
 const Product = (props) => {
   return (
@@ -17,8 +18,13 @@ const Product = (props) => {
       }}
     >
       {/* Main product section */}
+
       {props.products.map((item) => {
-        return <ProductItem key={item.id} product={item} />;
+        return (
+          <SnackbarProvider key={item.id} maxSnack={3}>
+            <ProductItem product={item} />
+          </SnackbarProvider>
+        );
       })}
     </Box>
   );
